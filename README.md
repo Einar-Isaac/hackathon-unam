@@ -30,3 +30,8 @@ Para activar Nova, copia `.env.example` a `.env` y pega las llaves temporales de
 - **Disguise Score:** 60 puntos si los safeties profundos al snap no coinciden con los que pide la cobertura real, más hasta 40 puntos por el desplazamiento de los safeties en el primer segundo. Se considera engaño con 60 o más.
 - **Ruptura del bolsillo:** un pass rusher llega a menos de 2.0 yd del QB antes del pase. Un sack cuenta como ruptura aunque no haya cruce previo.
 - **Éxito del engaño:** la jugada disfrazada termina en incompleto, intercepción o sack.
+
+## Capturas de la Herramienta
+![Dashboard Principal y Curvas de Supervivencia](capturas/dashboard-principal.png)
+![Ranking de Disguise Score y Pass Rushers](capturas/rankings-disguise.png)
+![Visor Tactico 2D Normalizado](capturas/visor-tactico-2d.png)
