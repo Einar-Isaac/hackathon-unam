@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+﻿import type { ReactNode } from 'react'
 import type { PassRusher, RankingRow } from '../types'
 import { useApi } from '../useApi'
 import GlassCard, { Estado } from './GlassCard'
@@ -57,7 +57,7 @@ function RushersLetales() {
               </td>
               <td className={`${TD} text-rose-300`}>{r.pct_ruptura.toFixed(1)}%</td>
               <td className={TD}>{r.seg_prom_colapso === null ? '—' : `${r.seg_prom_colapso.toFixed(2)} s`}</td>
-              <td className={`${TD} font-mono text-cyan-300`}>{r.hits} / {r.hurries} / {r.sacks}</td>
+              <td className={`${TD} whitespace-nowrap font-mono text-cyan-300`}>{r.hits} / {r.hurries} / {r.sacks}</td>
             </tr>
           ))}
         </Tabla>
@@ -74,3 +74,4 @@ export default function TopRankingsSection({ ranking }: { ranking: RankingRow[] 
     </div>
   )
 }
+

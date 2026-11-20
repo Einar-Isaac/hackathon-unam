@@ -108,3 +108,26 @@ export interface DetalleJugada extends Omit<JugadaCatalogo, 'bolsillo_roto'> {
   frames: Frame[]
 }
 
+
+export interface Insignias {
+  disguise: number | null
+  ttb_s: number | null
+  ttb_roto: boolean | null
+  cobertura: string
+  shell: string | null
+}
+
+export interface SolicitudAnalisis {
+  game_id: number | null
+  play_id: number | null
+  cobertura: string | null
+  pregunta: string | null
+}
+
+export interface AnalisisIA {
+  modo: 'nova' | 'offline'
+  modelo: string | null
+  analisis: string
+  aviso: string | null
+  contexto: { tipo: 'jugada' | 'cobertura' | 'global'; insignias: Insignias }
+}

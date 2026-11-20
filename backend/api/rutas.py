@@ -1,9 +1,12 @@
-﻿"""Endpoints /api: overview, supervivencia y jugadas."""
+﻿"""Endpoints /api: overview, supervivencia, jugadas, pass rushers y análisis IA."""
 from typing import Literal
 
 from fastapi import APIRouter, HTTPException, Query
 
-from backend.servicios import jugadas, kpis, rushers, supervivencia
+from backend.api.esquemas import SolicitudAnalisis
+from backend.servicios import (
+    analista_ia, contexto_ia, jugadas, kpis, rushers, supervivencia,
+)
 
 router = APIRouter(prefix="/api")
 
@@ -42,3 +45,12 @@ def detalle_jugada(game_id: int, play_id: int) -> dict:
         raise HTTPException(status_code=404, detail="Jugada fuera de la muestra")
     return d
 
+
+@router.post("/analisis-ia")
+def analisis_ia(solicitud: SolicitudAnalisis) -> dict:
+    """Análisis táctico con Amazon Nova (o diagnóstico offline si AWS no responde)."""
+    contexto = contexto_ia.construir_contexto(solicitud.game_id, solicitud.play_id, solicitud.cobertura)
+    if contexto is None:
+        raise HTTPException(status_code=404, detail="Jugada o cobertura no encontrada")
+    resultado = analista_ia.analizar(contexto, solicitud.pregunta)
+    return {**resultado, "contexto": contexto}

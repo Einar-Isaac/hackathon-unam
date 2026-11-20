@@ -1,4 +1,4 @@
-"""KPIs globales del tablero."""
+﻿"""KPIs globales del tablero."""
 from functools import lru_cache
 
 import pandas as pd
@@ -22,7 +22,7 @@ def _kpi_jugadas() -> dict:
             "analizadas": int(meta["n_analizadas"])}
 
 
-def _kpi_supervivencia(jm: pd.DataFrame) -> dict:
+def kpi_supervivencia(jm: pd.DataFrame) -> dict:
     d = jm.dropna(subset=["tiempo_observado", "bolsillo_roto"])
     t, ev = d["tiempo_observado"].to_numpy(), d["bolsillo_roto"].to_numpy()
     curva = kaplan_meier(t, ev)
@@ -30,7 +30,7 @@ def _kpi_supervivencia(jm: pd.DataFrame) -> dict:
     return {"supervivencia_2_5s": float(s25), "mediana_colapso_s": mediana_km(t, ev)}
 
 
-def _kpi_engano(jm: pd.DataFrame) -> dict:
+def kpi_engano(jm: pd.DataFrame) -> dict:
     d = jm.dropna(subset=["disguise_score"])
     fallido = d["passResult"].isin(RESULTADOS_EXITO)
     con = d["disguise_score"] >= UMBRAL_DISGUISE
@@ -38,7 +38,7 @@ def _kpi_engano(jm: pd.DataFrame) -> dict:
             "n_con_engano": int(con.sum()), "n_sin_engano": int((~con).sum())}
 
 
-def _kpi_ruptura(jm: pd.DataFrame) -> dict:
+def kpi_ruptura(jm: pd.DataFrame) -> dict:
     d = jm.dropna(subset=["bolsillo_roto"])
     roto = d["bolsillo_roto"] == 1
     sack = d["passResult"] == "S"
@@ -51,7 +51,8 @@ def calcular_overview() -> dict:
     """KPIs de las 4 tarjetas y ranking completo de defensas por disguise."""
     jm = repositorio.jugadas_metricas()
     return {
-        "kpis": {"jugadas": _kpi_jugadas(), "supervivencia": _kpi_supervivencia(jm),
-                 "engano": _kpi_engano(jm), "ruptura": _kpi_ruptura(jm)},
+        "kpis": {"jugadas": _kpi_jugadas(), "supervivencia": kpi_supervivencia(jm),
+                 "engano": kpi_engano(jm), "ruptura": kpi_ruptura(jm)},
         "ranking": a_registros(repositorio.ranking()),
     }
+

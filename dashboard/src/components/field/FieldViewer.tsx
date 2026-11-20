@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import type { DetalleJugada, JugadaCatalogo } from '../../types'
 import { useApi } from '../../useApi'
 import GlassCard, { Estado } from '../GlassCard'
@@ -78,10 +78,13 @@ function Leyenda() {
   )
 }
 
-export default function FieldViewer() {
+export default function FieldViewer({ onSeleccionar }: { onSeleccionar?: (j: JugadaCatalogo) => void }) {
   const catalogo = useApi<JugadaCatalogo[]>('api/jugadas')
   const [sel, setSel] = useState<{ g: number; p: number } | null>(null)
   const actual = sel ?? (catalogo.data?.length ? { g: catalogo.data[0].gameId, p: catalogo.data[0].playId } : null)
+  const jugadaActual = catalogo.data?.find((j) => j.gameId === actual?.g && j.playId === actual?.p) ?? null
+  // Informa a la barra lateral IA qué jugada está en pantalla
+  useEffect(() => { if (jugadaActual) onSeleccionar?.(jugadaActual) }, [jugadaActual]) // eslint-disable-line react-hooks/exhaustive-deps
   const detalle = useApi<DetalleJugada>(actual ? `api/jugadas/${actual.g}/${actual.p}` : null)
 
   return (
@@ -100,3 +103,4 @@ export default function FieldViewer() {
     </GlassCard>
   )
 }
+
