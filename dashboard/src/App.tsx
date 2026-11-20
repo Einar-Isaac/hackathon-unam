@@ -1,8 +1,9 @@
-import DisguiseSection from './components/DisguiseSection'
+﻿import DisguiseSection from './components/DisguiseSection'
 import FieldViewer from './components/field/FieldViewer'
 import { Estado } from './components/GlassCard'
 import KpiCards from './components/KpiCards'
 import SurvivalChart from './components/SurvivalChart'
+import TopRankingsSection from './components/TopRankingsSection'
 import type { Overview } from './types'
 import { useApi } from './useApi'
 
@@ -10,7 +11,7 @@ export default function App() {
   const { data, error, cargando } = useApi<Overview>('api/overview')
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
+    <div className="relative min-h-screen overflow-hidden bg-slate-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-950/40 via-slate-950 to-slate-950 text-slate-100">
       {/* Degradados sutiles de fondo */}
       <div className="pointer-events-none absolute -left-40 -top-40 h-[32rem] w-[32rem] rounded-full bg-emerald-500/10 blur-3xl" />
       <div className="pointer-events-none absolute -right-40 top-1/3 h-[30rem] w-[30rem] rounded-full bg-cyan-500/10 blur-3xl" />
@@ -32,6 +33,7 @@ export default function App() {
             <KpiCards kpis={data.kpis} />
             <SurvivalChart />
             <DisguiseSection ranking={data.ranking} />
+            <TopRankingsSection ranking={data.ranking} />
           </>
         )}
         <FieldViewer />
@@ -39,3 +41,4 @@ export default function App() {
     </div>
   )
 }
+

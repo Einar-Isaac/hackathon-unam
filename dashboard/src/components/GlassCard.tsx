@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+﻿import type { ReactNode } from 'react'
 
 interface Props {
   titulo?: string
@@ -11,7 +11,7 @@ interface Props {
 // Tarjeta base con efecto cristal esmerilado
 export default function GlassCard({ titulo, subtitulo, derecha, className = '', children }: Props) {
   return (
-    <section className={`rounded-2xl border border-white/10 bg-white/5 p-5 shadow-2xl backdrop-blur-xl ${className}`}>
+    <section className={`rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-xl transition hover:border-emerald-400/30 ${className}`}>
       {(titulo || derecha) && (
         <header className="mb-4 flex flex-wrap items-start justify-between gap-3">
           <div>
@@ -31,3 +31,4 @@ export function Estado({ cargando, error }: { cargando: boolean; error: string |
   if (cargando) return <p className="animate-pulse text-sm text-slate-400">Cargando…</p>
   return null
 }
+

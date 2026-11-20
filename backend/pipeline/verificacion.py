@@ -6,7 +6,8 @@ import pandas as pd
 from backend.pipeline.almacenamiento import leer_tabla
 
 TABLAS = ["jugadas_metricas", "curvas_supervivencia",
-          "ranking_defensas_disguise", "tracking_muestra"]
+          "ranking_defensas_disguise", "tracking_muestra",
+          "ranking_pass_rushers", "metadatos"]
 
 
 def reporte(ruta_db: Path, sin_snap: int) -> None:

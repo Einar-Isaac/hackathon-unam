@@ -1,14 +1,34 @@
-// Tipos que reflejan las respuestas de la API (/api/...)
+﻿// Tipos que reflejan las respuestas de la API (/api/...)
 
 export interface Kpis {
-  disguise_promedio: number
-  supervivencia_2_5s: number
-  cobertura_mas_enganosa: string
-  cobertura_disguise_prom: number
-  cobertura_n_jugadas: number
-  n_jugadas: number
+  jugadas: { dropbacks: number; partidos: number; analizadas: number }
+  supervivencia: { supervivencia_2_5s: number; mediana_colapso_s: number | null }
+  engano: {
+    pct_fallido_con_engano: number | null
+    pct_fallido_sin_engano: number | null
+    n_con_engano: number
+    n_sin_engano: number
+  }
+  ruptura: {
+    pct_ruptura: number | null
+    pct_sack_con_colapso: number | null
+    pct_sack_sin_colapso: number | null
+    n_con_colapso: number
+  }
 }
 
+export interface PassRusher {
+  nflId: number
+  displayName: string | null
+  officialPosition: string | null
+  rush_snaps: number
+  rupturas: number
+  pct_ruptura: number
+  seg_prom_colapso: number | null
+  hits: number
+  hurries: number
+  sacks: number
+}
 export interface RankingRow {
   defensiveTeam: string
   n_jugadas: number
@@ -87,3 +107,4 @@ export interface DetalleJugada extends Omit<JugadaCatalogo, 'bolsillo_roto'> {
   evento_fin: string
   frames: Frame[]
 }
+

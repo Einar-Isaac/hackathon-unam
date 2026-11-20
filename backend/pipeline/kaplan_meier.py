@@ -7,24 +7,36 @@ from backend.pipeline.config import SEG_POR_FRAME, T_MAX_KM
 PASOS = int(round(T_MAX_KM / SEG_POR_FRAME))  # 45 -> grilla 0.0 ... 4.5 s
 
 
-def kaplan_meier(tiempos: np.ndarray, eventos: np.ndarray) -> pd.DataFrame:
-    """Evalúa S(t) en la grilla de 0.1 s. `eventos`: 1 = ruptura, 0 = censurado."""
+def _estimar(tiempos: np.ndarray, eventos: np.ndarray, largo_min: int) -> tuple[np.ndarray, np.ndarray]:
+    """S(t) y n en riesgo en décimas de segundo, de 0 a max(largo_min, t_max)."""
     # Tiempos como enteros (décimas de segundo) para evitar errores de coma flotante
     idx = np.rint(np.asarray(tiempos) / SEG_POR_FRAME).astype(int)
     ev = np.asarray(eventos).astype(int)
-    largo = max(PASOS, int(idx.max())) + 1
+    largo = max(largo_min, int(idx.max()) + 1)
 
     d = np.bincount(idx[ev == 1], minlength=largo)               # rupturas en t_i
     en_riesgo = np.bincount(idx, minlength=largo)[::-1].cumsum()[::-1]  # n_i: T >= t_i
     factor = np.ones(largo)
     hay = en_riesgo > 0
     factor[hay] = 1.0 - d[hay] / en_riesgo[hay]
-    surv = np.cumprod(factor)[: PASOS + 1]
+    return np.cumprod(factor), en_riesgo
+
+
+def kaplan_meier(tiempos: np.ndarray, eventos: np.ndarray) -> pd.DataFrame:
+    """Evalúa S(t) en la grilla de 0.1 s. `eventos`: 1 = ruptura, 0 = censurado."""
+    surv, en_riesgo = _estimar(tiempos, eventos, PASOS + 1)
     return pd.DataFrame({
         "tiempo_s": np.round(np.arange(PASOS + 1) * SEG_POR_FRAME, 1),
-        "supervivencia": surv,
+        "supervivencia": surv[: PASOS + 1],
         "n_en_riesgo": en_riesgo[: PASOS + 1],
     })
+
+
+def mediana_km(tiempos: np.ndarray, eventos: np.ndarray) -> float | None:
+    """Primer tiempo (s) con S(t) <= 0.5; None si la curva nunca baja de la mitad."""
+    surv, _ = _estimar(tiempos, eventos, 1)
+    bajo = np.flatnonzero(surv <= 0.5)
+    return round(float(bajo[0]) * SEG_POR_FRAME, 1) if bajo.size else None
 
 
 def curvas_por_grupo(jm: pd.DataFrame, variable: str) -> pd.DataFrame:

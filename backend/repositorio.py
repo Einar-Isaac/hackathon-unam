@@ -21,6 +21,16 @@ def ranking() -> pd.DataFrame:
     return _consulta("SELECT * FROM ranking_defensas_disguise ORDER BY disguise_score_prom DESC")
 
 
+def metadatos() -> pd.DataFrame:
+    return _consulta("SELECT * FROM metadatos")
+
+
+def ranking_rushers(min_snaps: int, limite: int) -> pd.DataFrame:
+    """Top de pass rushers por % de ruptura, con un mínimo de rush snaps."""
+    return _consulta("SELECT * FROM ranking_pass_rushers WHERE rush_snaps >= ? "
+                     "ORDER BY pct_ruptura DESC, rush_snaps DESC LIMIT ?", (min_snaps, limite))
+
+
 def curvas(variable: str) -> pd.DataFrame:
     return _consulta("SELECT * FROM curvas_supervivencia WHERE variable = ? "
                      "ORDER BY grupo, tiempo_s", (variable,))
